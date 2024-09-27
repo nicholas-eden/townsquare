@@ -1387,7 +1387,7 @@
     "edition": "",
     "team": "townsfolk",
     "firstNightReminder": "",
-    "otherNightReminder": "",
+    "otherNightReminder": "Mark the recently killed executee with the 'Died Today' token. If they are good, the Cannibal will wake tonight when the executee would have woken. If they are evil, mark the Cannibal as 'Poisoned'. The Storyteller may pretend that the Cannibal has any ability.",
     "reminders": [
       "Poisoned",
       "Died Today"

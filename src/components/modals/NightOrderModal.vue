@@ -355,7 +355,7 @@ ul {
     width: 100%;
     margin-bottom: 3px;
     .icon {
-      width: 55px;
+      width: 5vh;
       background-size: 100%;
       background-position: 50%;
       background-repeat: no-repeat;
