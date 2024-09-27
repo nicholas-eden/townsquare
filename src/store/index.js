@@ -13,7 +13,7 @@ import jinxesJSON from "../hatred.json";
 Vue.use(Vuex);
 
 // helper functions
-const clean = (id) => id.toLocaleLowerCase().replace(/[^a-z0-9]/g, "");
+const clean = (id) => id.replace(/[^a-zA-Z0-9]/g, "");
 
 const getRolesByEdition = (edition = editionJSON[0]) => {
   return new Map(
@@ -179,6 +179,8 @@ export default new Vuex.Store({
       });
       return customRoles;
     },
+    getFirstNightOrder: () => (id) => getFirstNightOrder(id),
+    getOtherNightOrder: () => (id) => getOtherNightOrder(id),
     rolesJSONbyId: () => rolesJSONbyId,
   },
   mutations: {

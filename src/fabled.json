@@ -13,7 +13,11 @@
     "id": "angel",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["Protect", "Something Bad"],
+    "reminders": [
+      "Protected",
+      "Protected",
+      "Something Bad"
+    ],
     "setup": false,
     "name": "Angel",
     "team": "fabled",
@@ -33,9 +37,11 @@
     "id": "hellslibrarian",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["Something Bad"],
+    "reminders": [
+      "Something Bad"
+    ],
     "setup": false,
-    "name": "Hell's Librarian",
+    "name": "Hell’s Librarian",
     "team": "fabled",
     "ability": "Something bad might happen to whoever talks when the Storyteller has asked for silence."
   },
@@ -43,7 +49,9 @@
     "id": "revolutionary",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["Used"],
+    "reminders": [
+      "Register Falsely?"
+    ],
     "setup": false,
     "name": "Revolutionary",
     "team": "fabled",
@@ -62,9 +70,11 @@
   {
     "id": "toymaker",
     "firstNightReminder": "",
-    "otherNight": 1,
+    "otherNight": 1.1,
     "otherNightReminder": "If it is a night when a Demon attack could end the game, and the Demon is marked “Final night: No Attack,” then the Demon does not act tonight. (Do not wake them.)",
-    "reminders": ["Final Night: No Attack"],
+    "reminders": [
+      "Final Night: No Attack"
+    ],
     "setup": false,
     "name": "Toymaker",
     "team": "fabled",
@@ -74,7 +84,9 @@
     "id": "fibbin",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["Used"],
+    "reminders": [
+      "No Ability"
+    ],
     "setup": false,
     "name": "Fibbin",
     "team": "fabled",
@@ -83,9 +95,13 @@
   {
     "id": "duchess",
     "firstNightReminder": "",
-    "otherNight": 1,
+    "otherNight": 1.2,
     "otherNightReminder": "Wake each player marked “Visitor” or “False Info” one at a time. Show them the Duchess token, then fingers (1, 2, 3) equaling the number of evil players marked “Visitor” or, if you are waking the player marked “False Info,” show them any number of fingers except the number of evil players marked “Visitor.”",
-    "reminders": ["Visitor", "False Info"],
+    "reminders": [
+      "Visitor",
+      "Visitor",
+      "False Info"
+    ],
     "setup": false,
     "name": "Duchess",
     "team": "fabled",
@@ -105,7 +121,9 @@
     "id": "spiritofivory",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["No extra evil"],
+    "reminders": [
+      "No More Evil"
+    ],
     "setup": false,
     "name": "Spirit of Ivory",
     "team": "fabled",
@@ -113,8 +131,8 @@
   },
   {
     "id": "djinn",
-    "firstNight": 0,
-    "firstNightReminder": "",
+    "firstNight": 1.1,
+    "firstNightReminder": "Inform the group of all Djinn special rules for this game.",
     "otherNightReminder": "",
     "reminders": [],
     "setup": false,
@@ -124,23 +142,46 @@
   },
   {
     "id": "stormcatcher",
-    "firstNight": 1,
-    "firstNightReminder": "Mark a good player as \"Safe\". Wake each evil player and show them the marked player.",
+    "firstNight": 1.3,
+    "firstNightReminder": "Announce the good 'Safe' character. Mark the player with that character as 'Safe'. Wake each evil player and show them the marked player.",
     "otherNightReminder": "",
-    "reminders": ["Safe"],
+    "reminders": [
+      "Safe"
+    ],
     "setup": false,
     "name": "Storm Catcher",
     "team": "fabled",
     "ability": "Name a good character. If in play, they can only die by execution, but evil players learn which player it is."
   },
   {
-    "id": "deusexfiasco",
+    "id": "bootlegger",
+    "firstNight": 1.2,
+    "firstNightReminder": "Inform the group of all homebrew characters or rules for this game.",
+    "otherNightReminder": "",
+    "reminders": [],
+    "setup": false,
+    "name": "Bootlegger",
+    "team": "fabled",
+    "ability": "This script has homebrew characters or rules."
+  },
+  {
+    "id": "ferryman",
     "firstNightReminder": "",
     "otherNightReminder": "",
-    "reminders": ["Whoops"],
+    "reminders": [],
     "setup": false,
-    "name": "Deus ex Fiasco",
+    "name": "Ferryman",
     "team": "fabled",
-    "ability": "Once per game, the Storyteller will make a \"mistake\", correct it and publicly admit to it."
+    "ability": "On the final day, all dead players regain their vote token."
+  },
+  {
+    "id": "gardener",
+    "firstNightReminder": "",
+    "otherNightReminder": "",
+    "reminders": [],
+    "setup": false,
+    "name": "Gardener",
+    "team": "fabled",
+    "ability": "The Storyteller assigns 1 or more players' characters."
   }
 ]

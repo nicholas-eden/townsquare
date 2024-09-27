@@ -79,6 +79,10 @@ export default {
     overflow-y: auto;
   }
 
+  .role & {
+    max-height: 100%;
+  }
+
   .roles &,
   .characters & {
     max-height: 100%;
@@ -156,6 +160,11 @@ export default {
   .characters & {
     max-width: 100%;
     padding: 10px;
+  }
+  .role &,
+  .roles & {
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
