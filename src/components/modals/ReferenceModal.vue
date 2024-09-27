@@ -57,17 +57,13 @@
           <span
             class="icon"
             :style="{
-              backgroundImage: `url(${require(
-                '../../assets/icons/' + jinx.first.id + '.png',
-              )})`,
+              backgroundImage: `url(https://raw.githubusercontent.com/tomozbot/botc-icons/refs/heads/main/WEBP/${jinx.first.id}.webp`,
             }"
           ></span>
           <span
             class="icon"
             :style="{
-              backgroundImage: `url(${require(
-                '../../assets/icons/' + jinx.second.id + '.png',
-              )})`,
+              backgroundImage: `url(https://raw.githubusercontent.com/tomozbot/botc-icons/refs/heads/main/WEBP/${jinx.second.id}.webp`,
             }"
           ></span>
           <div class="role">
@@ -150,9 +146,7 @@ export default {
         return role.image;
       }
 
-      return require('../../assets/icons/' +
-        (role.imageAlt || role.id) +
-        '.png');
+      return `https://raw.githubusercontent.com/tomozbot/botc-icons/refs/heads/main/WEBP/${role.imageAlt || role.id}.webp`;
     },
     ...mapMutations(["toggleModal"]),
   },

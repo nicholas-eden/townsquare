@@ -133,13 +133,31 @@ export default {
   computed: {
     rolesFirstNight: function () {
       const rolesFirstNight = [];
+      // add dawn and dusk to first night order sheet
+      rolesFirstNight.push(
+        {
+          id: "dusk",
+          name: "Dusk",
+          firstNight: this.$store.getters.getFirstNightOrder("DUSK"),
+          firstNightReminder:
+            "Some Travellers & Fabled act.",
+          players: [],
+        },
+        {
+          id: "dawn",
+          name: "Dawn",
+          firstNight: this.$store.getters.getFirstNightOrder("DAWN"),
+          firstNightReminder: "Wait a few seconds, then start the day.",
+          players: [],
+        },
+      );
       // add minion / demon infos to night order sheet
       if (this.players.length > 6) {
         rolesFirstNight.push(
           {
-            id: "evil",
+            id: "minion",
             name: "Minion info",
-            firstNight: 5,
+            firstNight: this.$store.getters.getFirstNightOrder("MINION"),
             team: "minion",
             players: this.players.filter((p) => p.role.team === "minion"),
             firstNightReminder:
@@ -149,7 +167,7 @@ export default {
           {
             id: "evil",
             name: "Demon info & bluffs",
-            firstNight: 8,
+            firstNight: this.$store.getters.getFirstNightOrder("DEMON"),
             team: "demon",
             players: this.players.filter((p) => p.role.team === "demon"),
             firstNightReminder:
@@ -175,6 +193,24 @@ export default {
     },
     rolesOtherNight: function () {
       const rolesOtherNight = [];
+      // add dawn and dusk to other nights order sheet
+      rolesOtherNight.push(
+        {
+          id: "dusk",
+          name: "Dusk",
+          otherNight: this.$store.getters.getOtherNightOrder("DUSK"),
+          otherNightReminder:
+            "Some Travellers & Fabled act.",
+          players: [],
+        },
+        {
+          id: "dawn",
+          name: "Dawn",
+          otherNight: this.$store.getters.getOtherNightOrder("DAWN"),
+          otherNightReminder: "Wait a few seconds, then start the day.",
+          players: [],
+        },
+      );
       this.roles.forEach((role) => {
         const players = this.players.filter((p) => p.role.id === role.id);
         if (role.otherNight && (role.team !== "traveler" || players.length)) {
@@ -194,6 +230,9 @@ export default {
   },
   methods: {
     getImage(role) {
+      if (role.id === "dusk" || role.id === "dawn") {
+        return require(`../../assets/${role.id}.png`);
+      }
       if (role.image && this.grimoire.isImageOptIn) {
         if (role.image?.length) {
           return role.image[0];
@@ -202,9 +241,7 @@ export default {
         return role.image;
       }
 
-      return require('../../assets/icons/' +
-        (role.imageAlt || role.id) +
-        '.png');
+      return `https://raw.githubusercontent.com/tomozbot/botc-icons/refs/heads/main/WEBP/${role.imageAlt || role.id}.webp`;
     },
     setResponded(player, roleId) {
       var hasResponded = { ...player.hasResponded };
@@ -318,13 +355,14 @@ ul {
     width: 100%;
     margin-bottom: 3px;
     .icon {
-      width: 6vh;
-      background-size: cover;
-      background-position: 0 0;
+      width: 5vh;
+      background-size: 100%;
+      background-position: 50%;
+      background-repeat: no-repeat;
       flex-grow: 0;
       flex-shrink: 0;
       text-align: center;
-      margin: 0 2px;
+      margin: 0 2px -10px;
       &:after {
         content: " ";
         display: block;

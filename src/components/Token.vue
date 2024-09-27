@@ -80,9 +80,7 @@ export default {
         return role.image;
       }
 
-      return require('../assets/icons/' +
-        (role.imageAlt || role.id) +
-        '.png');
+      return `https://raw.githubusercontent.com/tomozbot/botc-icons/refs/heads/main/WEBP/${role.imageAlt || role.id}.webp`;
     },
     setRole() {
       this.$emit("set-role");
@@ -167,6 +165,14 @@ export default {
 
     &.leaf-top5 {
       background-image: url("../assets/leaf-top5.png");
+    }
+
+    &.leaf-top6 {
+      background-image: url("../assets/leaf-top6.png");
+    }
+
+    &.leaf-top7 {
+      background-image: url("../assets/leaf-top7.png");
     }
   }
 

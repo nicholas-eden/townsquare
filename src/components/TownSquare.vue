@@ -62,7 +62,7 @@
             class="night-order first"
             v-if="nightOrder.get(role).first && grimoire.isNightOrder"
           >
-            <em>{{ nightOrder.get(role).first }}.</em>
+            <em>{{ nightOrder.get(role).first }}</em>
             <span v-if="role.firstNightReminder">{{
               role.firstNightReminder
             }}</span>
@@ -71,7 +71,7 @@
             class="night-order other"
             v-if="nightOrder.get(role).other && grimoire.isNightOrder"
           >
-            <em>{{ nightOrder.get(role).other }}.</em>
+            <em>{{ nightOrder.get(role).other }}</em>
             <span v-if="role.otherNightReminder">{{
               role.otherNightReminder
             }}</span>
@@ -506,7 +506,7 @@ export default {
   content: " ";
   opacity: 0;
   transition: opacity 250ms;
-  background-image: url("../assets/icons/x.png");
+  background-image: url("../assets/x.png");
   z-index: 2;
 }
 

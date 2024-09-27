@@ -1,5 +1,5 @@
 <template>
-  <Modal v-if="isDisplayed" @close="close">
+  <Modal class="role" v-if="isDisplayed" @close="close">
     <h3>
       Choose a new character for
       {{
@@ -151,11 +151,6 @@ export default {
 
 <style scoped lang="scss">
 @import "../../vars.scss";
- 
-  .modal{
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
   
 ul.tokens li {
   border-radius: 50%;
