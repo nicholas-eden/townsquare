@@ -3,6 +3,7 @@
 ### Version 2.18.2
 - Fix homebrew characters with multiple alignment-shifted images failing to display character icons on reminders
 - Update Acrobat and Organ Grinder
+- Add evil/good token image selection if multiple are present
 
 ---
 
