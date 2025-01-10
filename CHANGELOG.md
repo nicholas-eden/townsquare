@@ -3,6 +3,7 @@
 ### Version 2.19.1
 - Added Wizard
 - Fixed character setup warning overlapping with character tokens on large scripts in fullscreen mode
+- Add Reminder search bar like for the characters
 
 ### Version 2.19.0
 - Added Xaan
@@ -11,8 +12,12 @@
 - Updated Cannibal & Lycanthrope reminder tokens
 - Change "traveler" to "traveller" internally, and added continuing support for old scripts that use "traveler"
 
+---
+
 ### Version 2.18.5
 - Always display pronouns when set
+
+---
 
 ### Version 2.18.4
 - Add Gnome
