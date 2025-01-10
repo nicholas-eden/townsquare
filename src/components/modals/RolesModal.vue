@@ -28,32 +28,34 @@
         </div>
       </li>
     </ul>
-    <div class="warning" v-if="hasSelectedSetupRoles">
-      <font-awesome-icon icon="exclamation-triangle" />
-      <span>
-        Warning: there are characters selected that modify the game setup! The
-        randomizer does not account for these characters.
-      </span>
-    </div>
     <label class="multiple" :class="{ checked: allowMultiple }">
       <font-awesome-icon :icon="allowMultiple ? 'check-square' : 'square'" />
       <input type="checkbox" name="allow-multiple" v-model="allowMultiple" />
       Allow duplicate characters
     </label>
-    <div class="button-group">
-      <div
-        class="button"
-        @click="assignRoles"
-        :class="{
-          disabled: selectedRoles > nonTravellers || !selectedRoles,
-        }"
-      >
-        <font-awesome-icon icon="people-arrows" />
-        Assign {{ selectedRoles }} characters randomly
+    <div class="bottom">
+      <div class="button-group">
+        <div
+          class="button"
+          @click="assignRoles"
+          :class="{
+            disabled: selectedRoles > nonTravellers || !selectedRoles,
+          }"
+        >
+          <font-awesome-icon icon="people-arrows" />
+          Assign {{ selectedRoles }} characters randomly
+        </div>
+        <div class="button" @click="selectRandomRoles">
+          <font-awesome-icon icon="random" />
+          Shuffle characters
+        </div>
       </div>
-      <div class="button" @click="selectRandomRoles">
-        <font-awesome-icon icon="random" />
-        Shuffle characters
+      <div class="warning" v-if="hasSelectedSetupRoles">
+        <font-awesome-icon icon="exclamation-triangle" />
+        <span>
+          Warning: there are characters selected that modify the game setup! The
+          randomizer does not account for these characters.
+        </span>
       </div>
     </div>
   </Modal>
@@ -302,30 +304,35 @@ ul.tokens {
     }
   }
 
-  .warning {
-    color: red;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 10;
-    svg {
-      font-size: 150%;
-      vertical-align: middle;
-    }
-    span {
-      display: none;
-      text-align: center;
+  .bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .warning {
+      color: red;
       position: absolute;
-      right: -20px;
-      bottom: 30px;
-      width: 420px;
-      background: rgba(0, 0, 0, 0.75);
-      padding: 5px;
-      border-radius: 10px;
-      border: 2px solid black;
-    }
-    &:hover span {
-      display: block;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+      svg {
+        font-size: 150%;
+        vertical-align: middle;
+      }
+      span {
+        display: none;
+        text-align: center;
+        position: absolute;
+        right: -20px;
+        bottom: 30px;
+        width: 420px;
+        background: rgba(0, 0, 0, 0.75);
+        padding: 5px;
+        border-radius: 10px;
+        border: 2px solid black;
+      }
+      &:hover span {
+        display: block;
+      }
     }
   }
 }

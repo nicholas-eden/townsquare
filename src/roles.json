@@ -1671,6 +1671,17 @@
     "ability": "Each day, before nominations, you may publicly choose a player: they die. If executed, you only die if you lose roshambo."
   },
   {
+    "id": "wizard",
+    "name": "Wizard",
+    "edition": "",
+    "team": "minion",
+    "firstNightReminder": "If the Wizard's wish requires actions at night, run these.",
+    "otherNightReminder": "If the Wizard's wish requires actions at night, run these.",
+    "reminders": ["?","?"],
+    "setup": false,
+    "ability": "Once per game, choose to make a wish. If granted, it might have a price & leave a clue as to its nature."
+  },
+  {
     "id": "widow",
     "name": "Widow",
     "edition": "",

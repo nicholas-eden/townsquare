@@ -1,9 +1,9 @@
 # Release Notes
 
 ### Version 2.19.1
+- Added Wizard
+- Fixed character setup warning overlapping with character tokens on large scripts in fullscreen mode
 - Add Reminder search bar like for the characters
-
----
 
 ### Version 2.19.0
 - Added Xaan
