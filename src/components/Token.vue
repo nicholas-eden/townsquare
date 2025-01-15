@@ -54,6 +54,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    reminders: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   computed: {
     reminderLeaves: function () {
@@ -73,11 +77,48 @@ export default {
   methods: {
     getImage(role) {
       if (role.image && this.grimoire.isImageOptIn) {
-        if (Array.isArray(role.image)) {
+        if (!Array.isArray(role.image)) {
+          return role.image;
+        }
+
+        if (role.image.length === 1) {
           return role.image[0];
         }
 
-        return role.image;
+        // Implemented as stated here: https://github.com/ThePandemoniumInstitute/botc-release/blob/2671b6ac8d873c0af37fa73dbba5456ca0839aa9/script-schema.json#L39
+        let goodReminder = token.reminders.find(reminder => reminder.role === 'good');
+        let evilReminder = token.reminders.find(reminder => reminder.role === 'evil');
+        switch(role.type) {
+          case "townsfolk":
+          case "outsider":
+            if (evilReminder) {
+              return role.image[1];
+            }
+            break;
+
+          case "minion":
+          case "demon":
+            if (goodReminder) {
+              return role.image[1];
+            }
+            break;
+
+          case "traveler":
+            if (role.image.length !== 3) {
+              return role.image[0];
+            }
+            if (goodReminder) {
+              return role.image[1];
+            }
+            if (evilReminder) {
+              return role.image[2];
+            }
+            break;
+
+          // fabled is not needed as they should only have 1 image!
+        }
+
+        return role.image[0];
       }
 
       return require('../assets/icons/' +

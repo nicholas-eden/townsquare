@@ -51,6 +51,7 @@
 
       <Token
         :role="player.role"
+        :reminder=player.reminders
         @set-role="$emit('trigger', ['openRoleModal'])"
       />
 
