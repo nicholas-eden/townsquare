@@ -6,6 +6,7 @@
 - Updated Alchemist, Riot, and Al-Hadikhia ability texts
 - Updated Cannibal & Lycanthrope reminder tokens
 - Change "traveler" to "traveller" internally, and added continuing support for old scripts that use "traveler"
+- Fix isOfficial flag misused on custom scripts
 
 ### Version 2.18.5
 - Always display pronouns when set

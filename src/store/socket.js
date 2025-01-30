@@ -453,11 +453,12 @@ class LiveSession {
     if (this._isSpectator) return;
     const { edition } = this._store.state;
     let roles;
-    if (!edition.isOfficial) {
+    let isOfficial = edition.id !== "custom" && !edition.isOfficial
+    if (!isOfficial) {
       roles = this._store.getters.customRolesStripped;
     }
     this._sendDirect(playerId, "edition", {
-      edition: edition.isOfficial ? { id: edition.id } : edition,
+      edition: isOfficial ? { id: edition.id } : edition,
       ...(roles ? { roles } : {}),
     });
   }
