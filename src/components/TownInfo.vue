@@ -13,7 +13,7 @@
     ></li>
     <li v-if="players.length - teams.traveller < 5">Please add more players!</li>
     <li>
-      <span class="meta" v-if="!edition.isOfficial">
+      <span class="meta" v-if="!edition.isOfficial || (edition.logo && grimoire.isImageOptIn)">
         {{ edition.name }}
         {{ edition.author ? "by " + edition.author : "" }}
       </span>
