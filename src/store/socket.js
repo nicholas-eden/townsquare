@@ -453,7 +453,7 @@ class LiveSession {
     if (this._isSpectator) return;
     const { edition } = this._store.state;
     let roles;
-    let isOfficial = edition.id !== "custom" && !edition.isOfficial
+    let isOfficial = edition.id !== "custom" && !edition.isOfficial;
     if (!isOfficial) {
       roles = this._store.getters.customRolesStripped;
     }
