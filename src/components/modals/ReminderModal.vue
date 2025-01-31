@@ -122,7 +122,7 @@ export default {
       return reminders;
     },
     isDisplayed() {
-      return modals.reminder && availableReminders.length && players[playerIndex]
+      return this.modals.reminder && this.availableReminders.length && this.players[playerIndex]
     },
     ...mapState(["modals", "grimoire"]),
     ...mapState("players", ["players"]),
