@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.20.3
+- Corrected Atheist ability text to match the official app and upcoming physical tokens
+
 ### Version 2.20.2
 - Corrected Fool & Bishop ability texts to match the official app and physical game
 - Added missing "About To Die" reminder for the Organ Grinder
