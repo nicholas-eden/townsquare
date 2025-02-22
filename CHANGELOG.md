@@ -1,5 +1,9 @@
 # Release Notes
 
+### Version 2.20.3
+- Corrected Atheist, Fearmonger, & Lord of Typhon ability texts to match the official app and upcoming physical tokens
+- Corrected Beggar, Fibbin, Bone Collector, Pit-Hag, Scarlet Woman, & Voudon ability texts to match the official app and physical game
+
 ### Version 2.20.2
 - Corrected Fool & Bishop ability texts to match the official app and physical game
 - Added missing "About To Die" reminder for the Organ Grinder

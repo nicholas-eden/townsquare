@@ -90,7 +90,7 @@
     "setup": false,
     "name": "Fibbin",
     "team": "fabled",
-    "ability": "Once per game, 1 good player might get false information."
+    "ability": "Once per game, 1 good player might get incorrect information."
   },
   {
     "id": "duchess",

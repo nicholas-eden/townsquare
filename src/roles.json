@@ -245,7 +245,7 @@
       "Is The Demon"
     ],
     "setup": false,
-    "ability": "If there are 5 or more players alive & the Demon dies, you become the Demon. (Travellers don't count)"
+    "ability": "If there are 5 or more players alive & the Demon dies, you become the Demon. (Travellers don't count.)"
   },
   {
     "id": "baron",
@@ -328,7 +328,7 @@
     "otherNightReminder": "",
     "reminders": [],
     "setup": false,
-    "ability": "You must use a vote token to vote. Dead players may choose to give you theirs. If so, you learn their alignment. You are sober & healthy."
+    "ability": "You must use a vote token to vote. If a dead player gives you theirs, you learn their alignment. You are sober & healthy."
   },
   {
     "id": "grandmother",
@@ -715,7 +715,7 @@
     "otherNightReminder": "",
     "reminders": [],
     "setup": false,
-    "ability": "Only you & the dead can vote. They don't need a vote token to do so. A 50% majority is not required."
+    "ability": "Only you & the dead can vote. They don't need a vote token to do so. A 50% majority isn't required."
   },
   {
     "id": "bishop",
@@ -984,7 +984,7 @@
     "otherNightReminder": "The Pit-Hag points to a player and a character on the sheet. If this character is not in play, wake that player and show them the 'You are' card and the relevant character token. If the character is in play, nothing happens.",
     "reminders": [],
     "setup": false,
-    "ability": "Each night*, choose a player & a character they become (if not-in-play). If a Demon is made, deaths tonight are arbitrary."
+    "ability": "Each night*, choose a player & a character they become (if not in play). If a Demon is made, deaths tonight are arbitrary."
   },
   {
     "id": "eviltwin",
@@ -1124,7 +1124,7 @@
       "Has Ability"
     ],
     "setup": false,
-    "ability": "Once per game, at night, choose a dead player: they regain their ability until dusk."
+    "ability": "Once per game, at night*, choose a dead player: they regain their ability until dusk."
   },
   {
     "id": "steward",
@@ -1493,7 +1493,7 @@
     "otherNightReminder": "",
     "reminders": [],
     "setup": true,
-    "ability": "The Storyteller can break the game rules & if executed, good wins, even if you are dead. [No evil characters]"
+    "ability": "The Storyteller can break the game rules, and if executed, good wins, even if you are dead. [No evil characters]"
   },
   {
     "id": "ogre",
@@ -1657,7 +1657,7 @@
       "Fear"
     ],
     "setup": false,
-    "ability": "Each night, choose a player. If you nominate & execute them, their team loses. All players know if you choose a new player."
+    "ability": "Each night, choose a player: if you nominate & execute them, their team loses. All players know if you choose a new player."
   },
   {
     "id": "psychopath",
@@ -1677,7 +1677,10 @@
     "team": "minion",
     "firstNightReminder": "If the Wizard's wish requires actions at night, run these.",
     "otherNightReminder": "If the Wizard's wish requires actions at night, run these.",
-    "reminders": ["?","?"],
+    "reminders": [
+      "?",
+      "?"
+    ],
     "setup": false,
     "ability": "Once per game, choose to make a wish. If granted, it might have a price & leave a clue as to its nature."
   },
@@ -1896,7 +1899,7 @@
       "Dead"
     ],
     "setup": true,
-    "ability": "Each night*, choose a player: they die. [Evil characters are in a line. You are in the middle. +1 Minion. -? To +? Outsiders]"
+    "ability": "Each night*, choose a player: they die. [Evil characters are in a line. You are in the middle. +1 Minion. -? to +? Outsiders]"
   },
   {
     "id": "lleech",
