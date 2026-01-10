@@ -231,19 +231,36 @@ export default {
       }, 4000);
     },
     start() {
-      this.$store.commit("session/lockVote", 1);
-      this.$store.commit("session/setVoteInProgress", true);
-      clearInterval(this.voteTimer);
-      if (this.session.isVoteWatchingAllowed) {
-        this.voteTimer = setInterval(() => {
-          this.$store.commit("session/lockVote");
-          if (this.session.lockedVote > this.players.length) {
-            clearInterval(this.voteTimer);
-            this.$store.commit("session/setVoteInProgress", false);
+      const plNotConnected = this.$store.state.players.players.some(
+        (res) => !res.id || res.id === "",
+      );
+      let exec = true;
+      if (plNotConnected) {
+        let popup = "Some players are not seated: \n";
+        this.$store.state.players.players.find((res) => {
+          if (!res.id || res.id === "") {
+            console.log(popup);
+            popup += res.name + ", ";
           }
-        }, this.session.votingSpeed);
-      } else {
-        this.$store.commit("session/lockVote", this.players.length + 1);
+          return false;
+        });
+        exec = confirm(popup);
+      }
+      if (exec) {
+        this.$store.commit("session/lockVote", 1);
+        this.$store.commit("session/setVoteInProgress", true);
+        clearInterval(this.voteTimer);
+        if (this.session.isVoteWatchingAllowed) {
+          this.voteTimer = setInterval(() => {
+            this.$store.commit("session/lockVote");
+            if (this.session.lockedVote > this.players.length) {
+              clearInterval(this.voteTimer);
+              this.$store.commit("session/setVoteInProgress", false);
+            }
+          }, this.session.votingSpeed);
+        } else {
+          this.$store.commit("session/lockVote", this.players.length + 1);
+        }
       }
     },
     pause() {
