@@ -1,6 +1,10 @@
 # Release Notes
 
 ### Version 2.21.3
+- Added button "Force Clear All Roles" in the "Hosting" tab for the ST, that clears All roles for the rest of players.
+- Added button in the player role modal for the ST to be able to reveal that character to all other players.
+
+### Version 2.21.3
 - Fixed roles received sound effect not muting when sound effects were muted
 
 ### Version 2.21.2

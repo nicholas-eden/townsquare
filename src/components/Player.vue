@@ -226,6 +226,10 @@
                 {{ isNominating ? "Cancel Nomination" : "Nomination" }}
               </li>
             </template>
+            <li @click="revealCharacter(player)">
+              <font-awesome-icon icon="theater-masks" />
+              Reveal Character
+            </li>
           </template>
           <li
             @click="claimSeat"
@@ -421,6 +425,21 @@ export default {
     nominatePlayer(player) {
       this.isMenuOpen = false;
       this.$emit("trigger", ["nominatePlayer", player]);
+    },
+    revealCharacter(player) {
+      this.isMenuOpen = false;
+      console.log(player.reminders);
+      const popup = "Do you want to reveal this role to ALL players?";
+      if (confirm(popup)) {
+        this.$store.state.players.players.find((pl, index) => {
+          if (pl.id == player.id && pl.name == player.name) {
+            this.$store.commit("session/revealRole", {
+              player: player,
+              index: index,
+            });
+          }
+        });
+      }
     },
     cancel() {
       this.$emit("trigger", ["cancel"]);

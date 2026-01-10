@@ -176,6 +176,10 @@
                   ]"
               /></em>
             </li>
+            <li @click="forceClearRoles" v-if="!session.isSpectator">
+              Force Clear All Roles
+              <em><font-awesome-icon icon="trash-alt" /></em>
+            </li>
             <li @click="leaveSession">
               Leave Session
               <em>{{ session.sessionId }}</em>
@@ -358,6 +362,15 @@ export default {
         this.$store.commit("session/setSpectator", true);
         this.$store.commit("toggleGrimoire", false);
         this.$store.commit("session/setSessionId", sessionId);
+      }
+    },
+    forceClearRoles() {
+      if (
+        confirm(
+          "Are you sure you want to clear ALL PLAYERS' grimoires?",
+        )
+      ) {
+        this.$store.commit("session/forceClearRoles");
       }
     },
     leaveSession() {

@@ -221,6 +221,18 @@ class LiveSession {
       case "name":
         this._updatePlayerName(params);
         break;
+      case "reveal":
+        this._store.commit("players/update", {
+          player: this._store.state.players.players[params.index],
+          property: "role",
+          value: params.player.role,
+        }); 
+        break;
+      case "forceClearRoles":
+        if (this._isSpectator) {
+          this._store.dispatch("players/clearRoles");
+        }
+        break;
     }
   }
 
@@ -849,6 +861,22 @@ class LiveSession {
   }
 
   /**
+   * Reveal a role to all players.
+   * @param payload player to reveal { player, index }
+   */
+  revealRole(payload) {
+    if (this._isSpectator) return;
+    if (payload.player.role) {
+      this._send("reveal", payload);
+    }
+  }
+
+  forceClearRoles() {
+    if (this._isSpectator) return;
+    this._send("forceClearRoles");
+  }
+
+  /**
    * A player nomination. ST only
    * This also syncs the voting speed to the players.
    * Payload can be an object with {nomination} property or just the nomination itself, or undefined.
@@ -1083,6 +1111,9 @@ export default (store) => {
           session.distributeRoles();
         }
         break;
+      case "session/revealRole":
+        session.revealRole(payload);
+        break;
       case "session/nomination":
       case "session/setNomination":
         session.nomination(payload);
@@ -1110,6 +1141,9 @@ export default (store) => {
         break;
       case "session/setVoteWatchingAllowed":
         session.setVoteWatchingAllowed();
+        break;
+      case "session/forceClearRoles":
+        session.forceClearRoles();
         break;
       case "toggleNight":
         session.setIsNight();
