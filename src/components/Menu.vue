@@ -138,7 +138,7 @@
               @click="distributeRoles"
             >
               Send Characters
-              <em><font-awesome-icon icon="seedling" /></em>
+              <em><font-awesome-icon icon="theater-masks" /></em>
             </li>
             <li
               v-if="session.voteHistory.length || !session.isSpectator"
@@ -291,7 +291,6 @@ export default {
   computed: {
     showSendCharacters: function () {
       return (
-        this.npcs.some((npc) => npc.id === "gardener") &&
         !this.npcs.some((npc) => npc.id === "tor")
       );
     },
