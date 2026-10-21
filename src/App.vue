@@ -108,20 +108,20 @@ export default {
           this.$store.commit("toggleModal", "nightOrder");
           break;
         case "e":
-          if (this.session.isSpectator) return;
+          if (!this.session.isStoryteller) return;
           this.$store.commit("toggleModal", "edition");
           break;
         case "c":
-          if (this.session.isSpectator) return;
+          if (!this.session.isStoryteller) return;
           this.$store.commit("toggleModal", "roles");
           break;
         case "v":
-          if (this.session.voteHistory.length || !this.session.isSpectator) {
+          if (this.session.voteHistory.length || this.session.isStoryteller) {
             this.$store.commit("toggleModal", "voteHistory");
           }
           break;
         case "s":
-          if (this.session.isSpectator) return;
+          if (!this.session.isStoryteller) return;
           this.$refs.menu.toggleNight();
           break;
         case "escape":
@@ -143,7 +143,7 @@ export default {
       const player = this.players.find((p) => p.id === this.session.playerId);
       if (
         !player ||
-        (this.session.isSpectator && player.id !== this.session.playerId)
+        (!this.session.isStoryteller && player.id !== this.session.playerId)
       )
         return;
       this.$store.commit("players/update", {

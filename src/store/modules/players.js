@@ -110,7 +110,7 @@ const actions = {
   },
   clearRoles({ state, commit, rootState }) {
     let players;
-    if (rootState.session.isSpectator) {
+    if (!rootState.session.isStoryteller) {
       players = state.players.map((player) => {
         if (player.role.team !== "traveller") {
           player.role = {};

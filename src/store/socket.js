@@ -3,7 +3,7 @@ class LiveSession {
     this._wss = "wss://clocktower.live:8001/";
     // this._wss = "ws://localhost:8081/"; // uncomment if using local server with NODE_ENV=development
     this._socket = null;
-    this._isSpectator = true;
+    this._isStoryteller = false;
     this._gamestate = [];
     this._store = store;
     this._pingInterval = 30 * 1000; // 30 seconds between pings
@@ -29,11 +29,11 @@ class LiveSession {
       this._wss +
         channel +
         "/" +
-        (this._isSpectator
-          ? encodeURIComponent(this._store.state.session.playerId) +
+        (this._isStoryteller
+          ? "host"
+          : encodeURIComponent(this._store.state.session.playerId) +
             "?secret=" +
-            encodeURIComponent(this._store.state.session.playerSecret)
-          : "host"),
+            encodeURIComponent(this._store.state.session.playerSecret)),
     );
     this._socket.addEventListener("message", this._handleMessage.bind(this));
     this._socket.onopen = this._onOpen.bind(this);
@@ -88,7 +88,7 @@ class LiveSession {
    * @private
    */
   _onOpen() {
-    if (this._isSpectator) {
+    if (!this._isStoryteller) {
       this._sendDirect(
         "host",
         "getGamestate",
@@ -107,9 +107,9 @@ class LiveSession {
   _ping() {
     this._handlePing();
     this._send("ping", [
-      this._isSpectator
-        ? this._store.state.session.playerId
-        : Object.keys(this._players).length,
+      this._isStoryteller
+        ? Object.keys(this._players).length
+        : this._store.state.session.playerId,
       "latency",
     ]);
     clearTimeout(this._pingTimer);
@@ -142,7 +142,7 @@ class LiveSession {
         this._updateGamestate(params);
         break;
       case "clear":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.dispatch("players/clearRoles");
         break;
       case "player":
@@ -155,7 +155,7 @@ class LiveSession {
         this._handlePing(params);
         break;
       case "nomination":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         if (!params) {
           // create vote history record
           this._store.commit(
@@ -166,48 +166,48 @@ class LiveSession {
         this._store.commit("session/nomination", { nomination: params });
         break;
       case "swap":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("players/swap", params);
         break;
       case "move":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("players/move", params);
         break;
       case "remove":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("players/remove", params);
         break;
       case "marked":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setMarkedPlayer", params);
         break;
       case "isNight":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("toggleNight", params);
         break;
       case "allowSelfNaming":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setAllowSelfNaming", params);
         break;
       case "isVoteHistoryAllowed":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setVoteHistoryAllowed", params);
         this._store.commit("session/clearVoteHistory");
         break;
       case "isVoteWatchingAllowed":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setVoteWatchingAllowed", params);
         break;
       case "votingSpeed":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setVotingSpeed", params);
         break;
       case "clearVoteHistory":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/clearVoteHistory");
         break;
       case "isVoteInProgress":
-        if (!this._isSpectator) return;
+        if (this._isStoryteller) return;
         this._store.commit("session/setVoteInProgress", params);
         break;
       case "vote":
@@ -276,8 +276,8 @@ class LiveSession {
     this._pings = {};
     this._store.commit("session/setPlayerCount", 0);
     this._store.commit("session/setPing", 0);
-    this._isSpectator = this._store.state.session.isSpectator;
-    if (!this._isSpectator) {
+    this._isStoryteller = this._store.state.session.isStoryteller;
+    if (this._isStoryteller) {
       // clear all claimed and reserved seats when hosting a new session
       this._store.state.players.players.forEach((player) => {
         this._store.commit("players/update", {
@@ -305,7 +305,7 @@ class LiveSession {
     this._store.commit("session/setReconnecting", false);
     clearTimeout(this._reconnectTimer);
     if (this._socket) {
-      if (this._isSpectator) {
+      if (!this._isStoryteller) {
         this._sendDirect("host", "bye", this._store.state.session.playerId);
       }
       this._socket.close(1000);
@@ -320,7 +320,7 @@ class LiveSession {
    * @param isLightweight
    */
   sendGamestate(playerId = "", isLightweight = false) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._gamestate = this._store.state.players.players.map((player) => ({
       name: player.name,
       id: player.id,
@@ -365,7 +365,7 @@ class LiveSession {
    * @private
    */
   _updateGamestate(data) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     const {
       gamestate,
       isLightweight,
@@ -458,7 +458,7 @@ class LiveSession {
    * Publish a grimoire clear event. ST only
    */
   sendClear() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("clear");
   }
 
@@ -467,7 +467,7 @@ class LiveSession {
    * @param playerId
    */
   sendEdition(playerId = "") {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     const { edition } = this._store.state;
     let roles;
     if (!edition.isOfficial) {
@@ -486,7 +486,7 @@ class LiveSession {
    * @private
    */
   _updateEdition({ edition, roles }) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     this._store.commit("setEdition", edition);
     if (roles) {
       this._store.commit("setCustomRoles", roles);
@@ -516,7 +516,7 @@ class LiveSession {
    * Publish an npc update. ST only
    */
   sendNpcs() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send(
       "npcs",
       this._store.state.npcs.map((f) => (f.isCustom ? f : { id: f.id })),
@@ -529,7 +529,7 @@ class LiveSession {
    * @private
    */
   _updateNpcs(npcs) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     this._store.commit("setNpcs", {
       npcs: npcs.map((f) => this._store.state.otherNpcs.get(f.id) || f),
     });
@@ -543,7 +543,7 @@ class LiveSession {
    */
   sendPlayer({ player, property, value }) {
     if (
-      this._isSpectator ||
+      !this._isStoryteller ||
       property === "reminders" ||
       property === "hasResponded" ||
       property === "alignmentIndex"
@@ -577,7 +577,7 @@ class LiveSession {
    * @private
    */
   _updatePlayer({ index, property, value }) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     const player = this._store.state.players.players[index];
     if (!player) return;
     // special case where a player stops being a traveller
@@ -630,7 +630,7 @@ class LiveSession {
     //Do not re-send for an update that was recieved from the sockets layer
     if (
       isFromSockets ||
-      (this._isSpectator && this._store.state.session.playerId !== player.id)
+      (!this._isStoryteller && this._store.state.session.playerId !== player.id)
     )
       return;
     const index = this._store.state.players.players.indexOf(player);
@@ -648,7 +648,7 @@ class LiveSession {
     //Do not re-send pronoun data for an update that was recieved from the sockets layer
     if (
       isFromSockets ||
-      (this._isSpectator && this._store.state.session.playerId !== player.id)
+      (!this._isStoryteller && this._store.state.session.playerId !== player.id)
     )
       return;
     const index = this._store.state.players.players.indexOf(player);
@@ -666,7 +666,7 @@ class LiveSession {
     //Do not re-send name data for an update that was recieved from the sockets layer
     if (
       isFromSockets ||
-      (this._isSpectator && this._store.state.session.playerId !== player.id)
+      (!this._isStoryteller && this._store.state.session.playerId !== player.id)
     )
       return;
     const index = this._store.state.players.players.indexOf(player);
@@ -732,7 +732,7 @@ class LiveSession {
    */
   _handlePing([playerIdOrCount = 0, latency] = []) {
     const now = new Date().getTime();
-    if (!this._isSpectator) {
+    if (this._isStoryteller) {
       // remove players that haven't sent a ping in twice the timespan
       for (let player in this._players) {
         if (now - this._players[player] > this._pingInterval * 2) {
@@ -769,10 +769,12 @@ class LiveSession {
       this._store.commit("session/setPing", parseInt(latency, 10));
     }
     // update player count
-    if (!this._isSpectator || playerIdOrCount) {
+    if (this._isStoryteller || playerIdOrCount) {
       this._store.commit(
         "session/setPlayerCount",
-        this._isSpectator ? playerIdOrCount : Object.keys(this._players).length,
+        this._isStoryteller
+          ? Object.keys(this._players).length
+          : playerIdOrCount,
       );
     }
   }
@@ -783,7 +785,7 @@ class LiveSession {
    * @private
    */
   _handleBye(playerId) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     delete this._players[playerId];
     this._store.state.players.players.forEach((player) => {
       if (player.id === playerId) {
@@ -811,7 +813,7 @@ class LiveSession {
    * @param seat either -1 to vacate or the index of the seat claimed
    */
   claimSeat(seat) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     const players = this._store.state.players.players;
     const playerId = this._store.state.session.playerId;
     const player = players[seat];
@@ -830,7 +832,7 @@ class LiveSession {
    * @private
    */
   _updateSeat([index, value]) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     const idProperty = "id";
     const connectedProperty = "connected";
     const players = this._store.state.players.players;
@@ -872,7 +874,7 @@ class LiveSession {
    * This will be split server side so that each player only receives their own (sub)message.
    */
   distributeRoles() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     const message = {};
 
     gtag("event", "send_roles", {
@@ -911,7 +913,7 @@ class LiveSession {
    * @param payload [nominator, nominee]|{nomination}
    */
   nomination(payload) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     const nomination = payload ? payload.nomination || payload : payload;
     const players = this._store.state.players.players;
     if (
@@ -931,7 +933,7 @@ class LiveSession {
    * Set the isVoteInProgress status. ST only
    */
   setVoteInProgress() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("isVoteInProgress", this._store.state.session.isVoteInProgress);
   }
 
@@ -939,7 +941,7 @@ class LiveSession {
    * Send the isNight status. ST only
    */
   setIsNight() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("isNight", this._store.state.grimoire.isNight);
   }
 
@@ -947,7 +949,7 @@ class LiveSession {
    * Send the isVoteHistoryAllowed state. ST only
    */
   setVoteHistoryAllowed() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send(
       "isVoteHistoryAllowed",
       this._store.state.session.isVoteHistoryAllowed,
@@ -965,7 +967,7 @@ class LiveSession {
    * Sends the allowSelfNaming state. ST only
    */
   setAllowSelfNaming() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("allowSelfNaming", this._store.state.session.allowSelfNaming);
 
     const enabled = this._store.state.session.allowSelfNaming
@@ -980,7 +982,7 @@ class LiveSession {
    * Send the isVoteWatchingAllowed state. ST only
    */
   setVoteWatchingAllowed() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send(
       "isVoteWatchingAllowed",
       this._store.state.session.isVoteWatchingAllowed,
@@ -999,7 +1001,7 @@ class LiveSession {
    * @param votingSpeed voting speed in seconds, minimum 1
    */
   setVotingSpeed(votingSpeed) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     if (votingSpeed) {
       this._send("votingSpeed", votingSpeed);
     }
@@ -1010,7 +1012,7 @@ class LiveSession {
    * @param playerIndex, player id or -1 for empty
    */
   setMarked(playerIndex) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("marked", playerIndex);
   }
 
@@ -1018,7 +1020,7 @@ class LiveSession {
    * Clear the vote history for everyone. ST only
    */
   clearVoteHistory() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("clearVoteHistory");
   }
 
@@ -1031,13 +1033,13 @@ class LiveSession {
     const player = this._store.state.players.players[index];
     if (
       this._store.state.session.playerId === player.id ||
-      !this._isSpectator
+      this._isStoryteller
     ) {
       // send vote only if it is your own vote or you are the storyteller
       this._send("vote", [
         index,
         this._store.state.session.votes[index],
-        !this._isSpectator,
+        this._isStoryteller,
       ]);
     }
   }
@@ -1062,7 +1064,7 @@ class LiveSession {
    * Lock a vote. ST only
    */
   lockVote() {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     const { lockedVote, votes, nomination } = this._store.state.session;
     const { players } = this._store.state.players;
     const index = (nomination[1] + lockedVote - 1) % players.length;
@@ -1076,7 +1078,7 @@ class LiveSession {
    * @private
    */
   _handleLock([lock, vote]) {
-    if (!this._isSpectator) return;
+    if (this._isStoryteller) return;
     this._store.commit("session/lockVote", lock);
     if (lock > 1) {
       const { lockedVote, nomination } = this._store.state.session;
@@ -1093,7 +1095,7 @@ class LiveSession {
    * @param payload
    */
   swapPlayer(payload) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("swap", payload);
   }
 
@@ -1102,7 +1104,7 @@ class LiveSession {
    * @param payload
    */
   movePlayer(payload) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("move", payload);
   }
 
@@ -1111,7 +1113,7 @@ class LiveSession {
    * @param payload
    */
   removePlayer(payload) {
-    if (this._isSpectator) return;
+    if (!this._isStoryteller) return;
     this._send("remove", payload);
   }
 }
@@ -1217,7 +1219,7 @@ export default (store) => {
   // check for session Id in hash
   const sessionId = window.location.hash.substr(1);
   if (sessionId) {
-    store.commit("session/setSpectator", true);
+    store.commit("session/setStoryteller", false);
     store.commit("session/setSessionId", sessionId);
     store.commit("toggleGrimoire", false);
   }

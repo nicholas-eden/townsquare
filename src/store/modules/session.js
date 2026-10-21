@@ -14,7 +14,7 @@ const handleVote = (state, [index, vote]) => {
 
 const state = () => ({
   sessionId: "",
-  isSpectator: false,
+  isStoryteller: true,
   isReconnecting: false,
   playerCount: 0,
   ping: 0,
@@ -47,7 +47,7 @@ const set = (key) => (state, val) => {
 const mutations = {
   setPlayerId: set("playerId"),
   setPlayerSecret: set("playerSecret"),
-  setSpectator: set("isSpectator"),
+  setStoryteller: set("isStoryteller"),
   setReconnecting: set("isReconnecting"),
   setPlayerCount: set("playerCount"),
   setPing: set("ping"),
@@ -84,7 +84,7 @@ const mutations = {
    * @param players
    */
   addHistory(state, players) {
-    if (!state.isVoteHistoryAllowed && state.isSpectator) return;
+    if (!state.isVoteHistoryAllowed && !state.isStoryteller) return;
     if (!state.nomination || state.lockedVote <= players.length) return;
     const isExile = players[state.nomination[1]].role.team === "traveller";
     const votes = [];

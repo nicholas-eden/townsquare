@@ -12,7 +12,7 @@
       <br />
       <template
         v-if="
-          !session.isSpectator ||
+          session.isStoryteller ||
           session.isVoteWatchingAllowed ||
           (!session.isVoteInProgress && session.lockedVote < 1)
         "
@@ -28,7 +28,7 @@
       </em>
       <em v-else>(majority is {{ Math.ceil(players.length / 2) }})</em>
 
-      <template v-if="!session.isSpectator">
+      <template v-if="session.isStoryteller">
         <div
           v-if="!session.isVoteInProgress && session.lockedVote < 1"
           class="buttons"

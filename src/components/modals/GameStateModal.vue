@@ -15,7 +15,7 @@
       <div class="button townsfolk" @click="copy">
         <font-awesome-icon icon="copy" /> Copy JSON
       </div>
-      <div class="button demon" @click="load" v-if="!session.isSpectator">
+      <div class="button demon" @click="load" v-if="session.isStoryteller">
         <font-awesome-icon icon="cog" /> Load State
       </div>
     </div>
@@ -88,7 +88,7 @@ export default {
       navigator.clipboard.writeText(this.input || this.gamestate);
     },
     load: function () {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       try {
         const data = JSON.parse(this.input || this.gamestate);
         const { bluffs, edition, roles, npcs, players } = data;

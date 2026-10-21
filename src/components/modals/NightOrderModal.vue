@@ -2,7 +2,7 @@
   <Modal
     class="night-reference"
     :class="{
-      storyteller: !session.isSpectator,
+      storyteller: session.isStoryteller,
     }"
     @close="toggleModal('nightOrder')"
     v-if="modals.nightOrder && roles.size"
@@ -36,7 +36,7 @@
                 :class="{ dead: player.isDead }"
                 :key="index"
               >
-                <template v-if="!session.isSpectator">
+                <template v-if="session.isStoryteller">
                   <div class="option" @click="setResponded(player, role.id)">
                     {{ player.name }}
                     <font-awesome-icon
@@ -49,7 +49,7 @@
                     />
                   </div>
                 </template>
-                <template v-if="session.isSpectator">{{
+                <template v-if="!session.isStoryteller">{{
                   player.name + (role.players.length > index + 1 ? "," : "")
                 }}</template>
               </small>
@@ -92,7 +92,7 @@
                 :class="{ dead: player.isDead }"
                 :key="index"
               >
-                <template v-if="!session.isSpectator">
+                <template v-if="session.isStoryteller">
                   <div class="option" @click="setResponded(player, role.id)">
                     <font-awesome-icon
                       :icon="[
@@ -105,7 +105,7 @@
                     {{ player.name }}
                   </div>
                 </template>
-                <template v-if="session.isSpectator">{{
+                <template v-if="!session.isStoryteller">{{
                   player.name + (role.players.length > index + 1 ? "," : "")
                 }}</template>
               </small>

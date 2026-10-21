@@ -38,7 +38,7 @@
     </ul>
     <div
       class="button-group"
-      v-if="playerIndex >= 0 && otherTravellers.size && !session.isSpectator"
+      v-if="playerIndex >= 0 && otherTravellers.size && session.isStoryteller"
     >
       <span
         class="button"
@@ -118,7 +118,7 @@ export default {
           role,
         });
       } else {
-        if (this.session.isSpectator && role.team === "traveller") return;
+        if (!this.session.isStoryteller && role.team === "traveller") return;
         // assign to player
         const player = this.$store.state.players.players[this.playerIndex];
         this.$store.commit("players/update", {
@@ -254,7 +254,7 @@ ul.tokens li {
   }
 }
 
-#townsquare.spectator ul.tokens li.traveller {
+#townsquare:not(.storyteller) ul.tokens li.traveller {
   display: none;
 }
 

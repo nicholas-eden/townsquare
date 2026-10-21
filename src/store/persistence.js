@@ -76,8 +76,9 @@ module.exports = (store) => {
     );
   }
   if (localStorage.getItem("session") && !window.location.hash.substr(1)) {
+    // stored as [isSpectator, sessionId] for backwards compatibility
     const [spectator, sessionId] = JSON.parse(localStorage.getItem("session"));
-    store.commit("session/setSpectator", spectator);
+    store.commit("session/setStoryteller", !spectator);
     store.commit("session/setSessionId", sessionId);
   }
 
@@ -206,7 +207,8 @@ module.exports = (store) => {
         if (payload) {
           localStorage.setItem(
             "session",
-            JSON.stringify([state.session.isSpectator, payload]),
+            // stored as [isSpectator, sessionId] for backwards compatibility
+            JSON.stringify([!state.session.isStoryteller, payload]),
           );
         } else {
           localStorage.removeItem("session");

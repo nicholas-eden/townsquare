@@ -7,7 +7,7 @@
         {
           dead: player.isDead,
           marked:
-            (!session.isSpectator || session.isVoteWatchingAllowed) &&
+            (session.isStoryteller || session.isVoteWatchingAllowed) &&
             session.markedPlayer === index,
           'hand-raised': player.handRaised,
           'no-vote': player.isVoteless,
@@ -18,19 +18,19 @@
             player.id &&
             player.id === session.playerId,
           'vote-yes':
-            (!session.isSpectator ||
+            (session.isStoryteller ||
               session.isVoteWatchingAllowed ||
               (!session.isVoteInProgress && session.lockedVote < 1) ||
               player.id === session.playerId) &&
             session.votes[index],
           'vote-twice':
-            (!session.isSpectator ||
+            (session.isStoryteller ||
               session.isVoteWatchingAllowed ||
               (!session.isVoteInProgress && session.lockedVote < 1) ||
               player.id === session.playerId) &&
             session.votes[index] === 2,
           'vote-hidden':
-            session.isSpectator &&
+            !session.isStoryteller &&
             !session.isVoteWatchingAllowed &&
             (session.isVoteInProgress || session.lockedVote >= 1) &&
             player.id !== session.playerId,
@@ -48,7 +48,7 @@
         v-if="
           nightOrder.get(player).first &&
           grimoire.isNightOrder &&
-          !session.isSpectator
+          session.isStoryteller
         "
       >
         <em>{{ nightOrder.get(player).first }}</em>
@@ -61,7 +61,7 @@
         v-if="
           nightOrder.get(player).other &&
           grimoire.isNightOrder &&
-          !session.isSpectator
+          session.isStoryteller
         "
       >
         <em>{{ nightOrder.get(player).other }}</em>
@@ -171,7 +171,7 @@
           <li
             @click="raiseHand"
             v-if="
-              session.isSpectator &&
+              !session.isStoryteller &&
               player.connected &&
               player.id === session.playerId &&
               !session.nomination
@@ -187,8 +187,8 @@
           <li
             @click="changePronouns"
             v-if="
-              !session.isSpectator ||
-              (session.isSpectator &&
+              session.isStoryteller ||
+              (!session.isStoryteller &&
                 player.connected &&
                 player.id === session.playerId)
             "
@@ -199,9 +199,9 @@
           <li
             @click="changeName"
             v-if="
-              !session.isSpectator ||
+              session.isStoryteller ||
               (session.allowSelfNaming &&
-                session.isSpectator &&
+                !session.isStoryteller &&
                 player.connected &&
                 player.id === session.playerId)
             "
@@ -209,7 +209,7 @@
             <font-awesome-icon icon="user-edit" />
             Rename
           </li>
-          <template v-if="!session.isSpectator">
+          <template v-if="session.isStoryteller">
             <li
               @click="updatePlayer('hasTwoVotes', !player.hasTwoVotes, true)"
               v-if="session.isTwoVotesEnabled"
@@ -245,7 +245,7 @@
           </template>
           <li
             @click="claimSeat"
-            v-if="session.isSpectator"
+            v-if="!session.isStoryteller"
             :class="{ disabled: player.id && player.id !== session.playerId }"
           >
             <font-awesome-icon icon="chair" />
@@ -358,7 +358,10 @@ export default {
         .replace(/:reminder:/g, '<i class="reminder-token"></i>');
     },
     raiseHand() {
-      if (this.session.isSpectator && this.player.id !== this.session.playerId)
+      if (
+        !this.session.isStoryteller &&
+        this.player.id !== this.session.playerId
+      )
         return;
       this.updatePlayer("handRaised", !this.player.handRaised, false);
     },
@@ -372,7 +375,10 @@ export default {
       this.updatePlayer("alignmentIndex", newAlignment);
     },
     changePronouns() {
-      if (this.session.isSpectator && this.player.id !== this.session.playerId)
+      if (
+        !this.session.isStoryteller &&
+        this.player.id !== this.session.playerId
+      )
         return;
       const pronouns = prompt("Player pronouns", this.player.pronouns);
       //Only update pronouns if not null (prompt was not cancelled)
@@ -416,7 +422,7 @@ export default {
     },
     updatePlayer(property, value, closeMenu = false) {
       if (
-        this.session.isSpectator &&
+        !this.session.isStoryteller &&
         property !== "reminders" &&
         property !== "handRaised" &&
         property !== "pronouns" &&
@@ -473,7 +479,7 @@ export default {
      * Allow the ST to override a locked vote.
      */
     vote(player) {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       if (!this.voteLocked) return;
 
       var count = this.session.votes[this.index];
@@ -549,12 +555,12 @@ export default {
       pointer-events: none;
     }
 
-    #townsquare.spectator &,
+    #townsquare:not(.storyteller) &,
     #app.night & {
       pointer-events: none;
     }
 
-    #townsquare:not(.spectator) &:hover:before {
+    #townsquare.storyteller &:hover:before {
       opacity: 0.5;
       top: -10px;
       transform: scale(1);
@@ -567,7 +573,7 @@ export default {
     transform: perspective(400px) scale(1);
   }
 
-  #townsquare:not(.spectator) &.dead .shroud:hover:before {
+  #townsquare.storyteller &.dead .shroud:hover:before {
     opacity: 1;
   }
 }
@@ -768,7 +774,7 @@ export default {
 }
 
 // a locked vote can be clicked on by the ST
-#townsquare.vote:not(.spectator) .player.vote-lock .overlay svg.vote {
+#townsquare.vote.storyteller .player.vote-lock .overlay svg.vote {
   pointer-events: all;
 }
 

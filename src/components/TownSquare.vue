@@ -4,7 +4,7 @@
     class="square"
     :class="{
       public: grimoire.isPublic,
-      spectator: session.isSpectator,
+      storyteller: session.isStoryteller,
       vote: session.nomination,
     }"
   >
@@ -31,7 +31,7 @@
       :class="{ closed: !isBluffsOpen }"
     >
       <h3>
-        <span v-if="session.isSpectator">Other Characters</span>
+        <span v-if="!session.isStoryteller">Other Characters</span>
         <span v-else>Demon Bluffs</span>
         <font-awesome-icon icon="times-circle" @click.stop="toggleBluffs" />
         <font-awesome-icon icon="plus-circle" @click.stop="toggleBluffs" />
@@ -68,7 +68,7 @@
             v-if="
               nightOrder.get(role).first &&
               grimoire.isNightOrder &&
-              !session.isSpectator
+              session.isStoryteller
             "
           >
             <em>{{ nightOrder.get(role).first }}</em>
@@ -81,7 +81,7 @@
             v-if="
               nightOrder.get(role).other &&
               grimoire.isNightOrder &&
-              !session.isSpectator
+              session.isStoryteller
             "
           >
             <em>{{ nightOrder.get(role).other }}</em>
@@ -142,7 +142,7 @@ export default {
       this.isNpcsOpen = !this.isNpcsOpen;
     },
     removeNpc(index) {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       this.$store.commit("setNpcs", { index });
     },
     handleTrigger(playerIndex, [method, params]) {
@@ -151,7 +151,7 @@ export default {
       }
     },
     claimSeat(playerIndex) {
-      if (!this.session.isSpectator) return;
+      if (this.session.isStoryteller) return;
       const player = this.players[playerIndex];
       if (this.session.playerId === player.id && player.connected) {
         this.$store.commit("session/claimSeat", -1);
@@ -166,7 +166,7 @@ export default {
     openRoleModal(playerIndex) {
       const player = this.players[playerIndex];
       if (
-        this.session.isSpectator &&
+        !this.session.isStoryteller &&
         player &&
         player.role.team === "traveller"
       )
@@ -175,7 +175,7 @@ export default {
       this.$store.commit("toggleModal", "role");
     },
     removePlayer(playerIndex) {
-      if (this.session.isSpectator || this.session.lockedVote) return;
+      if (!this.session.isStoryteller || this.session.lockedVote) return;
       if (
         confirm(
           `Do you really want to remove ${this.players[playerIndex].name}?`,
@@ -201,7 +201,7 @@ export default {
       }
     },
     swapPlayer(from, to) {
-      if (this.session.isSpectator || this.session.lockedVote) return;
+      if (!this.session.isStoryteller || this.session.lockedVote) return;
       if (to === undefined) {
         this.cancel();
         this.swap = from;
@@ -229,7 +229,7 @@ export default {
       }
     },
     movePlayer(from, to) {
-      if (this.session.isSpectator || this.session.lockedVote) return;
+      if (!this.session.isStoryteller || this.session.lockedVote) return;
       if (to === undefined) {
         this.cancel();
         this.move = from;
@@ -258,7 +258,7 @@ export default {
       }
     },
     nominatePlayer(from, to) {
-      if (this.session.isSpectator || this.session.lockedVote) return;
+      if (!this.session.isStoryteller || this.session.lockedVote) return;
       if (to === undefined) {
         const previousNominate = this.nominate;
         this.cancel();
@@ -685,7 +685,7 @@ export default {
   }
 }
 
-#townsquare:not(.spectator) .npcs ul li:hover .token:before {
+#townsquare.storyteller .npcs ul li:hover .token:before {
   opacity: 1;
 }
 </style>

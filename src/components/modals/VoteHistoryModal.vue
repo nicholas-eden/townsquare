@@ -1,7 +1,7 @@
 <template>
   <Modal
     class="vote-history"
-    v-if="modals.voteHistory && (session.voteHistory || !session.isSpectator)"
+    v-if="modals.voteHistory && (session.voteHistory || session.isStoryteller)"
     @close="toggleModal('voteHistory')"
   >
     <font-awesome-icon
@@ -9,12 +9,12 @@
       icon="trash-alt"
       class="clear"
       title="Clear vote history"
-      v-if="session.isSpectator"
+      v-if="!session.isStoryteller"
     />
 
     <h3>Vote history</h3>
 
-    <template v-if="!session.isSpectator">
+    <template v-if="session.isStoryteller">
       <div class="options">
         <div class="option" @click="setRecordVoteHistory">
           <font-awesome-icon

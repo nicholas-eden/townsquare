@@ -258,7 +258,7 @@ export default new Vuex.Store({
       }
 
       // Record the length of days and nights if is ST.
-      if (!session.isSpectator) {
+      if (session.isStoryteller) {
         return;
       }
       if (grimoire.isNight) {

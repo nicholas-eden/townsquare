@@ -14,7 +14,7 @@
     <span
       class="session"
       :class="{
-        spectator: session.isSpectator,
+        storyteller: session.isStoryteller,
         reconnecting: session.isReconnecting,
       }"
       v-if="session.sessionId"
@@ -34,7 +34,7 @@
           <font-awesome-icon icon="broadcast-tower" @click="tab = 'session'" />
           <font-awesome-icon
             icon="users"
-            v-if="!session.isSpectator"
+            v-if="session.isStoryteller"
             @click="tab = 'players'"
           />
           <font-awesome-icon icon="theater-masks" @click="tab = 'characters'" />
@@ -49,14 +49,14 @@
             <template v-if="grimoire.isPublic">Show</template>
             <em>[G]</em>
           </li>
-          <li @click="toggleNight" v-if="!session.isSpectator">
+          <li @click="toggleNight" v-if="session.isStoryteller">
             <template v-if="!grimoire.isNight">Switch to Night</template>
             <template v-if="grimoire.isNight">Switch to Day</template>
             <em>[S]</em>
           </li>
           <li
             @click="toggleNightOrder"
-            v-if="players.length && !session.isSpectator"
+            v-if="players.length && session.isStoryteller"
           >
             Night Order
             <em>
@@ -125,7 +125,7 @@
         <template v-if="tab === 'session'">
           <!-- Session -->
           <li class="headline" v-if="session.sessionId">
-            {{ session.isSpectator ? "Playing" : "Hosting" }}
+            {{ session.isStoryteller ? "Hosting" : "Playing" }}
           </li>
           <li class="headline" v-else>Live Session</li>
           <template v-if="!session.sessionId">
@@ -135,7 +135,7 @@
           <template v-else>
             <li v-if="session.ping">
               <small>
-                Delay to {{ session.isSpectator ? "Host" : "Players" }}
+                Delay to {{ session.isStoryteller ? "Players" : "Host" }}
               </small>
               <em>{{ session.ping }}ms</em>
             </li>
@@ -144,19 +144,19 @@
               <em><font-awesome-icon icon="copy" /></em>
             </li>
             <li
-              v-if="!session.isSpectator && showSendCharacters"
+              v-if="session.isStoryteller && showSendCharacters"
               @click="distributeRoles"
             >
               Send Characters
               <em><font-awesome-icon icon="seedling" /></em>
             </li>
             <li
-              v-if="session.voteHistory.length || !session.isSpectator"
+              v-if="session.voteHistory.length || session.isStoryteller"
               @click="toggleModal('voteHistory')"
             >
               Vote History<em>[V]</em>
             </li>
-            <li v-if="!session.isSpectator" @click="setVoteWatching">
+            <li v-if="session.isStoryteller" @click="setVoteWatching">
               Secret Vote
               <em
                 ><font-awesome-icon
@@ -166,7 +166,7 @@
                   ]"
               /></em>
             </li>
-            <li v-if="!session.isSpectator" @click="setTwoVotes">
+            <li v-if="session.isStoryteller" @click="setTwoVotes">
               Voting Twice
               <em
                 ><font-awesome-icon
@@ -183,11 +183,11 @@
           </template>
         </template>
 
-        <template v-if="tab === 'players' && !session.isSpectator">
+        <template v-if="tab === 'players' && session.isStoryteller">
           <!-- Users -->
           <li class="headline">Players</li>
           <li @click="addPlayer" v-if="players.length < 20">Add<em>[A]</em></li>
-          <li v-if="!session.isSpectator" @click="toggleSelfNaming">
+          <li v-if="session.isStoryteller" @click="toggleSelfNaming">
             Allow Self-Naming
             <em
               ><font-awesome-icon
@@ -214,18 +214,18 @@
         <template v-if="tab === 'characters'">
           <!-- Characters -->
           <li class="headline">Characters</li>
-          <li v-if="!session.isSpectator" @click="toggleModal('edition')">
+          <li v-if="session.isStoryteller" @click="toggleModal('edition')">
             Select Edition
             <em>[E]</em>
           </li>
           <li
             @click="toggleModal('roles')"
-            v-if="!session.isSpectator && players.length > 4"
+            v-if="session.isStoryteller && players.length > 4"
           >
             Choose & Assign
             <em>[C]</em>
           </li>
-          <li v-if="!session.isSpectator" @click="toggleModal('npc')">
+          <li v-if="session.isStoryteller" @click="toggleModal('npc')">
             Add NPCs
             <em><font-awesome-icon icon="dragon" /></em>
           </li>
@@ -328,7 +328,7 @@ export default {
       );
       if (sessionId) {
         this.$store.commit("session/clearVoteHistory");
-        this.$store.commit("session/setSpectator", false);
+        this.$store.commit("session/setStoryteller", true);
         this.$store.commit("session/setSessionId", sessionId);
         this.copySessionUrl();
       }
@@ -339,7 +339,7 @@ export default {
       navigator.clipboard.writeText(link);
     },
     distributeRoles() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       const popup =
         "Do you want to distribute assigned characters to all SEATED players?";
       if (confirm(popup)) {
@@ -369,19 +369,19 @@ export default {
       }
       if (sessionId) {
         this.$store.commit("session/clearVoteHistory");
-        this.$store.commit("session/setSpectator", true);
+        this.$store.commit("session/setStoryteller", false);
         this.$store.commit("toggleGrimoire", false);
         this.$store.commit("session/setSessionId", sessionId);
       }
     },
     leaveSession() {
       if (confirm("Are you sure you want to leave the active live game?")) {
-        this.$store.commit("session/setSpectator", false);
+        this.$store.commit("session/setStoryteller", true);
         this.$store.commit("session/setSessionId", "");
       }
     },
     addPlayer() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       if (this.players.length >= 20) return;
       const name = prompt("Player name", "Player " + (this.players.length + 1));
       if (name) {
@@ -389,7 +389,7 @@ export default {
       }
     },
     lowerHands() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       this.players.forEach((player) => {
         this.$store.commit("players/update", {
           player,
@@ -399,13 +399,13 @@ export default {
       });
     },
     randomizeSeatings() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       if (confirm("Are you sure you want to randomize seatings?")) {
         this.$store.dispatch("players/randomize");
       }
     },
     clearPlayers() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       if (confirm("Are you sure you want to remove all players?")) {
         // abort vote if in progress
         if (this.session.nomination) {
@@ -427,14 +427,14 @@ export default {
       }
     },
     toggleSelfNaming() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       this.$store.commit(
         "session/setAllowSelfNaming",
         !this.session.allowSelfNaming,
       );
     },
     setTwoVotes() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       this.$store.commit(
         "session/setTwoVotesEnabled",
         !this.session.isTwoVotesEnabled,
@@ -454,7 +454,7 @@ export default {
       }
     },
     setVoteWatching() {
-      if (this.session.isSpectator) return;
+      if (!this.session.isStoryteller) return;
       this.$store.commit(
         "session/setVoteWatchingAllowed",
         !this.session.isVoteWatchingAllowed,
@@ -524,9 +524,9 @@ export default {
   }
 
   span.session {
-    color: $demon;
-    &.spectator {
-      color: $townsfolk;
+    color: $townsfolk;
+    &.storyteller {
+      color: $demon;
     }
     &.reconnecting {
       animation: blink 1s infinite;
