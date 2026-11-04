@@ -4,7 +4,7 @@
   "description": "Blood on the Clocktower Town Square",
   "author": "Steffen Baumgart",
   "scripts": {
-    "clone-unofficial": "npx rimraf ./tmp && git clone https://github.com/tomozbot/botc-icons.git --depth 1 ./tmp/botc-icons",
+    "clone-unofficial": "npx rimraf ./tmp && git clone https://github.com/QuieType/botc-icons.git --depth 1 ./tmp/botc-icons",
     "copy-unofficial": "npx rimraf ./src/assets/icons/unofficial/ && npx copyfiles -u 3 ./tmp/botc-icons/WEBP/**/* ./src/assets/icons/unofficial && npx copyfiles -u 3 ./tmp/botc-icons/WEBP/* ./src/assets/icons/unofficial/ && npx rimraf ./tmp",
     "clone-official": "npx rimraf ./tmp && git clone https://github.com/ThePandemoniumInstitute/botc-release.git --depth 1 ./tmp/botc-release",
     "copy-official": "npx rimraf ./src/assets/icons/official/ && npx copyfiles -u 4 ./tmp/botc-release/resources/characters/**/* ./src/assets/icons/official/ && npx rimraf ./tmp",
