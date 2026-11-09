@@ -1,3 +1,10 @@
+This is a fork of [clocktower.live](https://github.com/bra1n/townsquare), edited to take unofficial art instead from the art of my friend Tiny, who painted super-cute token art heavily featuring cats. All other credit goes to the creators of the original project.
+
+The art is pulled from a fork of the [botc-icons](https://github.com/tomozbot/botc-icons) repo that clocktower.live uses [QuieType/botc-icons](https://github.com/quietype/botc-icons)
+
+AI use disclosure:
+No LLM was used to write any of the code in this repo after it was forked. In cases where I normally search google, such as when I searched "npm go back versions", gemini did provide search result summaries.
+
 # Blood on the Clocktower Grimoire & Town Square
 
 ![social](https://user-images.githubusercontent.com/325521/102897760-d1147b00-4468-11eb-9d7b-63a204bc9fc1.png)
